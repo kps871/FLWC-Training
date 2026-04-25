@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>EQ Troubleshooting — FLWC Sound & Tech</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Oxanium:wght@400;600;700;800&family=DM+Sans:ital,wght@0,400;0,500;0,600;1,400&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+    /* ── SCREEN STYLES ───────────────────────────────────── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --bg:#09090f; --surface:#111118; --surface2:#1a1a26; --surface3:#22223a;
+      --border:#2a2a40; --border2:#3a3a58;
+      --amber:#f0a500; --amber-dim:#7a5200; --amber-glow:rgba(240,165,0,0.12);
+      --cyan:#00d4ff; --cyan-dim:#004d5e; --cyan-glow:rgba(0,212,255,0.10);
+      --green:#3dd68c; --green-dim:#0d4a27; --green-glow:rgba(61,214,140,0.10);
+      --red:#f25c54; --red-dim:#4a0d0a; --red-glow:rgba(242,92,84,0.10);
+      --text:#e8e8f0; --text-muted:#7070a0; --text-dim:#404060;
+      --font-head:'Oxanium',sans-serif; --font-body:'DM Sans',sans-serif; --font-mono:'JetBrains Mono',monospace;
+      --radius:8px; --radius-lg:14px; --transition:all 0.18s ease;
+    }
+    body { font-family:var(--font-body); background:var(--bg); color:var(--text); font-size:16px; line-height:1.6; -webkit-font-smoothing:antialiased; }
+
+    /* Header */
+    .site-header { background:var(--surface); border-bottom:1px solid var(--border); padding:0 24px; position:sticky; top:0; z-index:100; }
+    .site-header-inner { max-width:1140px; margin:0 auto; display:flex; align-items:center; justify-content:space-between; height:60px; gap:24px; }
+    .site-logo { display:flex; align-items:center; gap:12px; text-decoration:none; }
+    .site-logo-mark { width:34px; height:34px; background:var(--amber); border-radius:6px; display:flex; align-items:center; justify-content:center; font-family:var(--font-head); font-size:14px; font-weight:800; color:var(--bg); }
+    .site-logo-text { font-family:var(--font-head); font-size:15px; font-weight:700; color:var(--text); }
+    .site-logo-sub { font-size:10px; color:var(--text-muted); display:block; line-height:1; margin-top:1px; text-transform:uppercase; letter-spacing:0.5px; }
+    .site-nav { display:flex; gap:4px; }
+    .site-nav a { color:var(--text-muted); text-decoration:none; font-size:13px; font-weight:500; padding:6px 12px; border-radius:var(--radius); transition:var(--transition); }
+    .site-nav a:hover { color:var(--text); background:var(--surface2); }
+    .site-nav a.active { color:var(--amber); }
+
+    /* Breadcrumb */
+    .breadcrumb-bar { background:var(--surface); border-bottom:1px solid var(--border); padding:10px 24px; font-family:var(--font-mono); font-size:11px; color:var(--text-muted); }
+    .breadcrumb-bar a { color:var(--text-muted); text-decoration:none; }
+    .breadcrumb-bar a:hover { color:var(--amber); }
+    .breadcrumb-bar span { color:var(--text-dim); margin:0 6px; }
+
+    /* Page */
+    .page-wrap { max-width:1140px; margin:0 auto; padding:40px 24px 80px; }
+    .page-header { margin-bottom:36px; padding-bottom:24px; border-bottom:1px solid var(--border); }
+    .page-eyebrow { font-family:var(--font-mono); font-size:10px; font-weight:600; letter-spacing:2.5px; text-transform:uppercase; color:var(--amber); margin-bottom:8px; }
+    .page-title { font-family:var(--font-head); font-size:clamp(24px,4vw,36px); font-weight:800; color:var(--text); margin-bottom:8px; letter-spacing:-0.5px; }
+    .page-desc { font-size:15px; color:var(--text-muted); max-width:600px; line-height:1.65; }
+    .print-btn { display:inline-flex; align-items:center; gap:8px; padding:8px 18px; background:var(--surface2); border:1px solid var(--border); border-radius:var(--radius); color:var(--text-muted); font-size:13px; font-weight:600; cursor:pointer; transition:var(--transition); margin-top:16px; font-family:var(--font-body); }
+    .print-btn:hover { color:var(--text); border-color:var(--border2); }
+
+    /* Table */
+    .ref-table-wrap { overflow-x:auto; margin-bottom:40px; border-radius:var(--radius-lg); border:1px solid var(--border); }
+    table { width:100%; border-collapse:collapse; font-size:14px; }
+    thead th { background:var(--surface2); color:var(--text-muted); font-family:var(--font-mono); font-size:10px; font-weight:600; text-transform:uppercase; letter-spacing:1.5px; padding:12px 16px; text-align:left; border-bottom:2px solid var(--border); white-space:nowrap; }
+    tbody td { padding:14px 16px; border-bottom:1px solid var(--border); vertical-align:top; line-height:1.6; }
+    tbody tr:last-child td { border-bottom:none; }
+    tbody tr:hover td { background:var(--surface2); }
+    .symptom { font-weight:600; color:var(--text); }
+    .freq-tag { display:inline-block; font-family:var(--font-mono); font-size:11px; font-weight:600; padding:3px 8px; border-radius:4px; white-space:nowrap; }
+    .freq-sub  { background:rgba(242,92,84,0.15);  color:#f25c54; border:1px solid #4a0d0a; }
+    .freq-bass { background:rgba(240,165,0,0.15);  color:#f0a500; border:1px solid #7a5200; }
+    .freq-lmid { background:rgba(251,146,60,0.15); color:#fb923c; border:1px solid #7c3a10; }
+    .freq-mid  { background:rgba(250,204,21,0.15); color:#facc15; border:1px solid #78570a; }
+    .freq-umid { background:rgba(61,214,140,0.15); color:#3dd68c; border:1px solid #0d4a27; }
+    .freq-pres { background:rgba(0,212,255,0.15);  color:#00d4ff; border:1px solid #004d5e; }
+    .freq-air  { background:rgba(192,132,252,0.15);color:#c084fc; border:1px solid #4a1d7a; }
+    .fix-text { color:var(--text-muted); font-size:13px; }
+
+    /* Frequency map */
+    .freq-map { display:flex; gap:2px; margin-bottom:40px; border-radius:var(--radius-lg); overflow:hidden; border:1px solid var(--border); }
+    .freq-band { flex:1; padding:16px 12px; text-align:center; display:flex; flex-direction:column; gap:6px; min-width:80px; }
+    .freq-band-name { font-family:var(--font-mono); font-size:9px; font-weight:600; text-transform:uppercase; letter-spacing:1px; }
+    .freq-band-hz { font-family:var(--font-mono); font-size:10px; font-weight:700; }
+    .freq-band-inst { font-size:10px; line-height:1.4; color:rgba(255,255,255,0.6); }
+    .fb1 { background:rgba(242,92,84,0.20);  border-right:1px solid var(--border); }
+    .fb2 { background:rgba(240,165,0,0.18);  border-right:1px solid var(--border); }
+    .fb3 { background:rgba(251,146,60,0.18); border-right:1px solid var(--border); }
+    .fb4 { background:rgba(250,204,21,0.18); border-right:1px solid var(--border); }
+    .fb5 { background:rgba(61,214,140,0.18); border-right:1px solid var(--border); }
+    .fb6 { background:rgba(0,212,255,0.18);  border-right:1px solid var(--border); }
+    .fb7 { background:rgba(192,132,252,0.18);}
+
+    .section-label { font-family:var(--font-mono); font-size:10px; font-weight:600; text-transform:uppercase; letter-spacing:2px; color:var(--text-muted); margin-bottom:20px; display:flex; align-items:center; gap:12px; }
+    .section-label::after { content:''; flex:1; height:1px; background:var(--border); }
+    .callout { padding:14px 18px; border-radius:var(--radius); border-left:3px solid var(--amber); background:var(--amber-glow); font-size:14px; color:var(--text); line-height:1.6; margin-bottom:32px; }
+    .callout strong { color:var(--amber); }
+
+    /* ── PRINT STYLES ────────────────────────────────────── */
+    @media print {
+      * { -webkit-print-color-adjust:exact !important; print-color-adjust:exact !important; }
+      body { background:#fff !important; color:#111 !important; font-size:11pt; font-family:'DM Sans',Arial,sans-serif; }
+      .site-header, .breadcrumb-bar, .print-btn, footer { display:none !important; }
+      .page-wrap { padding:0; max-width:100%; }
+      .page-header { border-bottom:2px solid #333; padding-bottom:12pt; margin-bottom:20pt; }
+      .page-eyebrow { color:#c27a00 !important; font-size:8pt; }
+      .page-title { color:#111 !important; font-size:20pt; margin-bottom:4pt; }
+      .page-desc { color:#444 !important; font-size:10pt; }
+      .section-label { color:#444 !important; font-size:8pt; }
+      .section-label::after { background:#ccc; }
+
+      /* Frequency map — print */
+      .freq-map { border:1px solid #ccc; page-break-inside:avoid; margin-bottom:20pt; }
+      .freq-band { padding:8pt 6pt; }
+      .freq-band-name { color:#333 !important; font-size:7pt; }
+      .freq-band-hz { color:#111 !important; font-size:8pt; }
+      .freq-band-inst { color:#555 !important; font-size:7pt; }
+      .fb1 { background:#fde8e8 !important; }
+      .fb2 { background:#fef3cd !important; }
+      .fb3 { background:#fde8d5 !important; }
+      .fb4 { background:#fefacd !important; }
+      .fb5 { background:#e8f8f0 !important; }
+      .fb6 { background:#e0f7fd !important; }
+      .fb7 { background:#f3e8fe !important; }
+
+      /* Table — print */
+      .ref-table-wrap { border:1px solid #ccc; border-radius:0; page-break-inside:avoid; }
+      thead th { background:#f0f0f0 !important; color:#333 !important; font-size:8pt; padding:8pt 10pt; border-bottom:1px solid #ccc; }
+      tbody td { padding:8pt 10pt; border-bottom:1px solid #e0e0e0; font-size:10pt; }
+      tbody tr:hover td { background:#fff !important; }
+      .symptom { color:#111 !important; }
+      .fix-text { color:#333 !important; font-size:9pt; }
+      .freq-tag { font-size:8pt; padding:2pt 5pt; }
+      .freq-sub  { background:#fde8e8 !important; color:#b00 !important; border-color:#e0a0a0 !important; }
+      .freq-bass { background:#fef3cd !important; color:#7a4000 !important; border-color:#e0c080 !important; }
+      .freq-lmid { background:#fde8d5 !important; color:#6a3000 !important; border-color:#e0b080 !important; }
+      .freq-mid  { background:#fefacd !important; color:#6a5000 !important; border-color:#e0d080 !important; }
+      .freq-umid { background:#e8f8f0 !important; color:#1a6040 !important; border-color:#80c0a0 !important; }
+      .freq-pres { background:#e0f7fd !important; color:#004060 !important; border-color:#80c0d8 !important; }
+      .freq-air  { background:#f3e8fe !important; color:#500080 !important; border-color:#c080e0 !important; }
+      .callout { background:#fff8e8 !important; border-color:#c27a00 !important; color:#333 !important; font-size:9pt; }
+      .callout strong { color:#8a5500 !important; }
+
+      /* Print header */
+      .print-header { display:block !important; text-align:center; margin-bottom:16pt; padding-bottom:10pt; border-bottom:1px solid #ccc; }
+      .print-header-title { font-size:9pt; color:#888; font-family:Arial,sans-serif; }
+
+      @page { margin:0.75in; size:letter; }
+    }
+
+    /* Hide print header on screen */
+    .print-header { display:none; }
+
+    @media (max-width:600px) { .freq-map { flex-wrap:wrap; } .freq-band { flex:1 1 100px; } }
+  </style>
+</head>
+<body>
+
+<header class="site-header">
+  <div class="site-header-inner">
+    <a href="../index.html" class="site-logo">
+      <div class="site-logo-mark">FL</div>
+      <div><span class="site-logo-text">Family Life Worship Center</span>
+      <span class="site-logo-sub">Sound &amp; Tech Training</span></div>
+    </a>
+    <nav class="site-nav">
+      <a href="../../index.html">Portal</a>
+      <a href="../index.html">Sound &amp; Tech</a>
+      <a href="eq-troubleshoot.html" class="active">EQ Troubleshooting</a>
+    </nav>
+  </div>
+</header>
+
+<div class="breadcrumb-bar">
+  <a href="../../index.html">Portal</a><span>›</span>
+  <a href="../index.html">Sound &amp; Tech</a><span>›</span>
+  Reference<span>›</span>EQ Troubleshooting
+</div>
+
+<div class="page-wrap">
+
+  <!-- Print-only header -->
+  <div class="print-header">
+    <div class="print-header-title">Family Life Worship Center — Sound &amp; Tech Reference</div>
+  </div>
+
+  <div class="page-header">
+    <div class="page-eyebrow">Reference — At the Board</div>
+    <h1 class="page-title">EQ Troubleshooting</h1>
+    <p class="page-desc">What you hear → where to look → what to do. Find the symptom, identify the frequency range, make the move.</p>
+    <button class="print-btn" onclick="window.print()">🖨 Print This Page</button>
+  </div>
+
+  <!-- Frequency Spectrum Map -->
+  <div class="section-label">Frequency Spectrum — Who Lives Where</div>
+  <div class="freq-map">
+    <div class="freq-band fb1">
+      <div class="freq-band-name" style="color:#f25c54;">Sub-Bass</div>
+      <div class="freq-band-hz" style="color:#f25c54;">20–80 Hz</div>
+      <div class="freq-band-inst">Kick body<br>Bass fundamental</div>
+    </div>
+    <div class="freq-band fb2">
+      <div class="freq-band-name" style="color:#f0a500;">Bass</div>
+      <div class="freq-band-hz" style="color:#f0a500;">80–250 Hz</div>
+      <div class="freq-band-inst">Kick attack<br>Bass guitar<br>Floor tom<br>Vocal warmth</div>
+    </div>
+    <div class="freq-band fb3">
+      <div class="freq-band-name" style="color:#fb923c;">Low-Mid</div>
+      <div class="freq-band-hz" style="color:#fb923c;">250–500 Hz</div>
+      <div class="freq-band-inst">Mud zone<br>Guitar body<br>Piano left hand</div>
+    </div>
+    <div class="freq-band fb4">
+      <div class="freq-band-name" style="color:#facc15;">Mid</div>
+      <div class="freq-band-hz" style="color:#facc15;">500 Hz–2 kHz</div>
+      <div class="freq-band-inst">Vocal intelligibility<br>Guitar presence<br>Snare crack<br>Keys</div>
+    </div>
+    <div class="freq-band fb5">
+      <div class="freq-band-name" style="color:#3dd68c;">Upper-Mid</div>
+      <div class="freq-band-hz" style="color:#3dd68c;">2–5 kHz</div>
+      <div class="freq-band-inst">Vocal clarity<br>Guitar bite<br>Hi-hat body<br>Cymbal</div>
+    </div>
+    <div class="freq-band fb6">
+      <div class="freq-band-name" style="color:#00d4ff;">Presence</div>
+      <div class="freq-band-hz" style="color:#00d4ff;">5–8 kHz</div>
+      <div class="freq-band-inst">Vocal definition<br>Pick attack<br>Snare snap</div>
+    </div>
+    <div class="freq-band fb7">
+      <div class="freq-band-name" style="color:#c084fc;">Air</div>
+      <div class="freq-band-hz" style="color:#c084fc;">8–20 kHz</div>
+      <div class="freq-band-inst">Cymbal shimmer<br>Breath<br>Reverb tails</div>
+    </div>
+  </div>
+
+  <!-- Troubleshooting Table -->
+  <div class="section-label">Troubleshooting — Symptom to Fix</div>
+
+  <div class="callout"><strong>How to use this table:</strong> Find what you hear in the left column. Go to the frequency range shown. Use a narrow boost to sweep and confirm the frequency, then cut. Work on the densest channel first — guitar, keys, or lead vocal.</div>
+
+  <div class="ref-table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th>What You Hear</th>
+          <th>Frequency Range</th>
+          <th>What To Do</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><span class="symptom">Boomy, undefined low end</span></td>
+          <td><span class="freq-tag freq-bass">80–200 Hz</span></td>
+          <td class="fix-text">High-pass all non-bass channels. Cut 100–150 Hz on the offending channel. Check whether kick and bass are competing in this range and carve space between them.</td>
+        </tr>
+        <tr>
+          <td><span class="symptom">Muddy, cloudy, unclear — like a blanket over the mix</span></td>
+          <td><span class="freq-tag freq-lmid">250–400 Hz</span></td>
+          <td class="fix-text">Narrow cut on the densest channels — guitar, keys, piano. 2–4 dB of reduction here cleans up a mix faster than anything else. Rarely boost in this range.</td>
+        </tr>
+        <tr>
+          <td><span class="symptom">Honky, nasal, or boxy quality on a vocal</span></td>
+          <td><span class="freq-tag freq-lmid">400–800 Hz</span></td>
+          <td class="fix-text">Boost-and-sweep narrow to find the exact frequency, then cut 3–5 dB. Common on close-mic'd vocals and acoustic guitar. The sweep reveals the worst offender precisely.</td>
+        </tr>
+        <tr>
+          <td><span class="symptom">Vocal buried — present but not intelligible</span></td>
+          <td><span class="freq-tag freq-mid">1–3 kHz</span></td>
+          <td class="fix-text">Small boost on the lead vocal at 1–2 kHz, or cut competing instruments (guitar, keys) in the same range. Cutting competitors is often more effective than boosting the vocal.</td>
+        </tr>
+        <tr>
+          <td><span class="symptom">Harsh, grating, fatiguing over time</span></td>
+          <td><span class="freq-tag freq-umid">2–4 kHz</span></td>
+          <td class="fix-text">Narrow cut at the specific harsh frequency. Check whether it is one channel or cumulative from many. The ear is most sensitive here — small adjustments make a large perceptual difference.</td>
+        </tr>
+        <tr>
+          <td><span class="symptom">Sibilance — excessive "s," "t," "sh" sounds on a vocal</span></td>
+          <td><span class="freq-tag freq-pres">5–8 kHz</span></td>
+          <td class="fix-text">Engage the X32 de-esser (Dynamics section, DE-ESS mode) on the vocal channel. Alternatively: narrow cut at the exact sibilant peak found by sweeping in this range.</td>
+        </tr>
+        <tr>
+          <td><span class="symptom">Thin, no body — instrument sounds small</span></td>
+          <td><span class="freq-tag freq-bass">100–300 Hz</span></td>
+          <td class="fix-text">Small broad boost in the low-mid on the thin channel. Also check whether the high-pass filter is set too high and is removing the fundamental tone of the instrument.</td>
+        </tr>
+        <tr>
+          <td><span class="symptom">Dull, lifeless, no top end — mix feels closed in</span></td>
+          <td><span class="freq-tag freq-air">8–12 kHz</span></td>
+          <td class="fix-text">High shelf boost on overheads or acoustic sources. Do not boost here on close-mic'd instruments — it adds harshness, not air. This range opens up cymbal shimmer and room sense.</td>
+        </tr>
+        <tr>
+          <td><span class="symptom">Kick drum has no punch — soft and undefined</span></td>
+          <td><span class="freq-tag freq-sub">60–80 Hz</span> <span class="freq-tag freq-umid">2–4 kHz</span></td>
+          <td class="fix-text">Boost 60–80 Hz for sub punch. Cut 300–400 Hz mud. Boost 2–4 kHz for beater click. Cut 500 Hz–1 kHz if the kick sounds hollow. Blend CH 1 and CH 8 (D6) for body + click.</td>
+        </tr>
+        <tr>
+          <td><span class="symptom">Snare sounds boxy or hollow — no crack</span></td>
+          <td><span class="freq-tag freq-lmid">400–600 Hz</span> <span class="freq-tag freq-pres">5–8 kHz</span></td>
+          <td class="fix-text">Cut 400–600 Hz to remove boxiness. Boost 5–8 kHz for crack and snap. Boost 150–200 Hz if the snare needs more body. The cut and the presence boost work together.</td>
+        </tr>
+        <tr>
+          <td><span class="symptom">Bass guitar is muddy — all low end, no definition</span></td>
+          <td><span class="freq-tag freq-lmid">250–400 Hz</span> <span class="freq-tag freq-mid">700–900 Hz</span></td>
+          <td class="fix-text">Cut 250–400 Hz mud. Boost 700–900 Hz for finger attack and string definition. Do not high-pass the bass — its fundamental lives below 80 Hz and you need it.</td>
+        </tr>
+        <tr>
+          <td><span class="symptom">Guitar is too heavy — competing with kick and bass</span></td>
+          <td><span class="freq-tag freq-sub">100–200 Hz</span></td>
+          <td class="fix-text">High-pass the guitar at 100–120 Hz. Guitar amps produce significant low-mid but no true bass. Removing sub-bass from the guitar clears space for kick and bass without affecting guitar tone.</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Quick Rules -->
+  <div class="section-label">Golden Rules</div>
+  <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:16px;margin-bottom:40px;">
+    <div style="background:var(--surface);border:1px solid var(--border);border-left:3px solid var(--amber);border-radius:var(--radius);padding:16px 18px;">
+      <div style="font-family:var(--font-mono);font-size:10px;color:var(--amber);font-weight:600;text-transform:uppercase;letter-spacing:1px;margin-bottom:8px;">Rule 1</div>
+      <div style="font-weight:600;color:var(--text);margin-bottom:6px;">Subtractive before additive</div>
+      <div style="font-size:13px;color:var(--text-muted);">Cut first. Remove what does not belong before adding anything. Most EQ problems are solved with cuts, not boosts.</div>
+    </div>
+    <div style="background:var(--surface);border:1px solid var(--border);border-left:3px solid var(--cyan);border-radius:var(--radius);padding:16px 18px;">
+      <div style="font-family:var(--font-mono);font-size:10px;color:var(--cyan);font-weight:600;text-transform:uppercase;letter-spacing:1px;margin-bottom:8px;">Rule 2</div>
+      <div style="font-weight:600;color:var(--text);margin-bottom:6px;">Boost narrow to find, cut to fix</div>
+      <div style="font-size:13px;color:var(--text-muted);">Use a narrow boost to sweep and identify the problem frequency precisely, then switch to a narrow cut. Do not guess.</div>
+    </div>
+    <div style="background:var(--surface);border:1px solid var(--border);border-left:3px solid var(--green);border-radius:var(--radius);padding:16px 18px;">
+      <div style="font-family:var(--font-mono);font-size:10px;color:var(--green);font-weight:600;text-transform:uppercase;letter-spacing:1px;margin-bottom:8px;">Rule 3</div>
+      <div style="font-weight:600;color:var(--text);margin-bottom:6px;">HPF every channel that does not need low end</div>
+      <div style="font-size:13px;color:var(--text-muted);">Vocals, guitars, keys, overheads — all carry low-frequency noise below their useful range. Cut it at the source before it accumulates.</div>
+    </div>
+    <div style="background:var(--surface);border:1px solid var(--border);border-left:3px solid var(--red);border-radius:var(--radius);padding:16px 18px;">
+      <div style="font-family:var(--font-mono);font-size:10px;color:var(--red);font-weight:600;text-transform:uppercase;letter-spacing:1px;margin-bottom:8px;">Rule 4</div>
+      <div style="font-weight:600;color:var(--text);margin-bottom:6px;">Cut one instrument to help another</div>
+      <div style="font-size:13px;color:var(--text-muted);">When a vocal is buried, cutting the competing guitar in the vocal's range is often more effective than boosting the vocal. Create space, do not fight for it.</div>
+    </div>
+  </div>
+
+</div>
+
+<footer style="border-top:1px solid var(--border);padding:24px;text-align:center;font-size:13px;color:var(--text-muted);font-family:var(--font-body);">
+  <a href="../index.html" style="color:var(--amber);text-decoration:none;">← Sound &amp; Tech</a>
+  &nbsp;·&nbsp; Family Life Worship Center — Sound &amp; Tech Reference
+  &nbsp;·&nbsp; <a href="compression-ref.html" style="color:var(--amber);text-decoration:none;">Compression Ref →</a>
+</footer>
+
+</body>
+</html>

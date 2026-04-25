@@ -1,0 +1,873 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>IEM Monitor Mixes — FLWC Tech Training</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Oxanium:wght@400;600;700;800&family=DM+Sans:ital,wght@0,400;0,500;0,600;1,400&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+  <style>/* ============================================================
+   FLWC Sound Engineering Training — Design System
+   Dark audio console aesthetic
+   ============================================================ */
+
+@import url('https://fonts.googleapis.com/css2?family=Oxanium:wght@400;600;700;800&family=DM+Sans:ital,wght@0,400;0,500;0,600;1,400&family=JetBrains+Mono:wght@400;600&display=swap');
+
+/* ── TOKENS ─────────────────────────────────────────────── */
+:root {
+  --bg:          #09090f;
+  --surface:     #111118;
+  --surface2:    #1a1a26;
+  --surface3:    #22223a;
+  --border:      #2a2a40;
+  --border2:     #3a3a58;
+
+  --amber:       #f0a500;
+  --amber-dim:   #7a5200;
+  --amber-glow:  rgba(240,165,0,0.12);
+
+  --cyan:        #00d4ff;
+  --cyan-dim:    #004d5e;
+  --cyan-glow:   rgba(0,212,255,0.10);
+
+  --green:       #3dd68c;
+  --green-dim:   #0d4a27;
+  --green-glow:  rgba(61,214,140,0.10);
+
+  --red:         #f25c54;
+  --red-dim:     #4a0d0a;
+  --red-glow:    rgba(242,92,84,0.10);
+
+  --text:        #e8e8f0;
+  --text-muted:  #7070a0;
+  --text-dim:    #4040608c;
+
+  --font-head:   'Oxanium', sans-serif;
+  --font-body:   'DM Sans', sans-serif;
+  --font-mono:   'JetBrains Mono', monospace;
+
+  --radius:      8px;
+  --radius-lg:   14px;
+  --radius-xl:   20px;
+
+  --shadow:      0 4px 24px rgba(0,0,0,0.5);
+  --shadow-lg:   0 8px 48px rgba(0,0,0,0.7);
+  --glow-amber:  0 0 20px rgba(240,165,0,0.25);
+  --glow-cyan:   0 0 20px rgba(0,212,255,0.20);
+
+  --transition:  all 0.18s cubic-bezier(0.4,0,0.2,1);
+}
+
+/* ── RESET ──────────────────────────────────────────────── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+body {
+  font-family: var(--font-body);
+  background: var(--bg);
+  color: var(--text);
+  font-size: 16px;
+  line-height: 1.65;
+  min-height: 100vh;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ── LAYOUT ─────────────────────────────────────────────── */
+.container { max-width: 1140px; margin: 0 auto; padding: 0 24px; }
+.container-wide { max-width: 1400px; margin: 0 auto; padding: 0 24px; }
+
+/* ── SITE HEADER ────────────────────────────────────────── */
+.site-header {
+  background: var(--surface);
+  border-bottom: 1px solid var(--border);
+  padding: 0 24px;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  backdrop-filter: blur(8px);
+}
+.site-header-inner {
+  max-width: 1140px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 60px;
+  gap: 24px;
+}
+.site-logo {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  text-decoration: none;
+}
+.site-logo-mark {
+  width: 34px; height: 34px;
+  background: var(--amber);
+  border-radius: 6px;
+  display: flex; align-items: center; justify-content: center;
+  font-family: var(--font-head);
+  font-size: 14px; font-weight: 800;
+  color: var(--bg);
+  letter-spacing: -0.5px;
+  flex-shrink: 0;
+}
+.site-logo-text {
+  font-family: var(--font-head);
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--text);
+  letter-spacing: 0.3px;
+}
+.site-logo-sub {
+  font-size: 10px;
+  color: var(--text-muted);
+  font-family: var(--font-body);
+  font-weight: 400;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  display: block;
+  line-height: 1;
+  margin-top: 1px;
+}
+.site-nav { display: flex; gap: 4px; }
+.site-nav a {
+  color: var(--text-muted);
+  text-decoration: none;
+  font-size: 13px;
+  font-weight: 500;
+  padding: 6px 12px;
+  border-radius: var(--radius);
+  transition: var(--transition);
+  white-space: nowrap;
+}
+.site-nav a:hover { color: var(--text); background: var(--surface2); }
+.site-nav a.active { color: var(--amber); }
+
+/* ── PAGE HERO ──────────────────────────────────────────── */
+.hero {
+  padding: 64px 0 48px;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+.hero::before {
+  content: '';
+  position: absolute;
+  top: -40px; left: 50%; transform: translateX(-50%);
+  width: 600px; height: 300px;
+  background: radial-gradient(ellipse, rgba(240,165,0,0.07) 0%, transparent 70%);
+  pointer-events: none;
+}
+.hero-eyebrow {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--amber);
+  text-transform: uppercase;
+  letter-spacing: 2.5px;
+  margin-bottom: 16px;
+  display: block;
+}
+.hero-title {
+  font-family: var(--font-head);
+  font-size: clamp(32px, 5vw, 52px);
+  font-weight: 800;
+  line-height: 1.1;
+  color: var(--text);
+  margin-bottom: 16px;
+  letter-spacing: -1px;
+}
+.hero-title span { color: var(--amber); }
+.hero-subtitle {
+  font-size: 18px;
+  color: var(--text-muted);
+  max-width: 580px;
+  margin: 0 auto 32px;
+  line-height: 1.6;
+}
+.hero-meta {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 24px;
+  flex-wrap: wrap;
+}
+.hero-meta-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+  color: var(--text-muted);
+  font-family: var(--font-mono);
+}
+.hero-meta-dot {
+  width: 6px; height: 6px;
+  border-radius: 50%;
+  background: var(--amber);
+  flex-shrink: 0;
+}
+
+/* ── SECTION HEADERS ────────────────────────────────────── */
+.section-label {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  color: var(--text-muted);
+  margin-bottom: 24px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.section-label::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: var(--border);
+}
+
+/* ── MODULE GRID ────────────────────────────────────────── */
+.module-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 20px;
+  margin-bottom: 48px;
+}
+.module-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 28px;
+  text-decoration: none;
+  color: inherit;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  transition: var(--transition);
+  position: relative;
+  overflow: hidden;
+}
+.module-card::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  transition: var(--transition);
+}
+.module-card:hover {
+  border-color: var(--border2);
+  transform: translateY(-2px);
+  box-shadow: var(--shadow);
+}
+.module-card:hover::before { opacity: 1; }
+.module-card.amber::before { background: var(--amber-glow); }
+.module-card.cyan::before  { background: var(--cyan-glow); }
+.module-card.green::before { background: var(--green-glow); }
+
+.module-card-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+}
+.module-number {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--text-muted);
+  background: var(--surface2);
+  padding: 3px 8px;
+  border-radius: 4px;
+  border: 1px solid var(--border);
+  letter-spacing: 1px;
+  flex-shrink: 0;
+}
+.module-badge {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  font-weight: 600;
+  padding: 3px 8px;
+  border-radius: 4px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+.badge-quiz   { background: var(--amber-glow); color: var(--amber); border: 1px solid var(--amber-dim); }
+.badge-ref    { background: var(--cyan-glow);  color: var(--cyan);  border: 1px solid var(--cyan-dim);  }
+.badge-tool   { background: var(--green-glow); color: var(--green); border: 1px solid var(--green-dim); }
+.badge-locked { background: var(--surface2);   color: var(--text-muted); border: 1px solid var(--border); }
+
+.module-title {
+  font-family: var(--font-head);
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--text);
+  line-height: 1.25;
+}
+.module-desc {
+  font-size: 14px;
+  color: var(--text-muted);
+  line-height: 1.6;
+  flex: 1;
+}
+.module-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-top: 12px;
+  border-top: 1px solid var(--border);
+  margin-top: auto;
+}
+.module-duration {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  color: var(--text-muted);
+}
+.module-arrow {
+  color: var(--text-muted);
+  font-size: 18px;
+  transition: var(--transition);
+}
+.module-card:hover .module-arrow { color: var(--amber); transform: translateX(4px); }
+
+/* ── PROGRESS BAR ───────────────────────────────────────── */
+.progress-bar {
+  height: 3px;
+  background: var(--border);
+  border-radius: 2px;
+  overflow: hidden;
+  margin-top: 8px;
+}
+.progress-fill {
+  height: 100%;
+  border-radius: 2px;
+  background: var(--amber);
+  transition: width 0.4s ease;
+}
+
+/* ── REFERENCE CARDS ────────────────────────────────────── */
+.ref-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  gap: 16px;
+  margin-bottom: 64px;
+}
+.ref-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 20px;
+  text-decoration: none;
+  color: inherit;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  transition: var(--transition);
+}
+.ref-card:hover { border-color: var(--cyan-dim); background: var(--surface2); }
+.ref-icon {
+  width: 40px; height: 40px;
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 18px;
+  flex-shrink: 0;
+}
+.ref-label { font-size: 14px; font-weight: 600; color: var(--text); margin-bottom: 2px; }
+.ref-sub   { font-size: 12px; color: var(--text-muted); }
+
+/* ── MODULE PAGE LAYOUT ─────────────────────────────────── */
+.module-page { padding: 40px 0 80px; }
+.module-page-header {
+  margin-bottom: 40px;
+  padding-bottom: 28px;
+  border-bottom: 1px solid var(--border);
+}
+.module-page-title {
+  font-family: var(--font-head);
+  font-size: clamp(24px, 4vw, 36px);
+  font-weight: 800;
+  color: var(--text);
+  margin-bottom: 10px;
+  letter-spacing: -0.5px;
+}
+.module-page-desc { font-size: 16px; color: var(--text-muted); max-width: 620px; }
+
+/* ── QUIZ ENGINE ────────────────────────────────────────── */
+.quiz-container {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  margin-bottom: 32px;
+}
+.quiz-header {
+  background: var(--surface2);
+  padding: 20px 24px;
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+.quiz-title {
+  font-family: var(--font-head);
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--text);
+}
+.quiz-score {
+  font-family: var(--font-mono);
+  font-size: 13px;
+  color: var(--text-muted);
+}
+.quiz-score span { color: var(--amber); font-weight: 600; }
+.quiz-body { padding: 28px 24px; }
+.quiz-question {
+  font-size: 17px;
+  font-weight: 600;
+  color: var(--text);
+  margin-bottom: 20px;
+  line-height: 1.5;
+}
+.quiz-question em { color: var(--amber); font-style: normal; }
+.quiz-options { display: flex; flex-direction: column; gap: 10px; }
+.quiz-option {
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 14px 18px;
+  cursor: pointer;
+  transition: var(--transition);
+  font-size: 15px;
+  color: var(--text);
+  text-align: left;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+.quiz-option:hover:not(:disabled) { border-color: var(--amber); background: var(--amber-glow); }
+.quiz-option.correct { border-color: var(--green); background: var(--green-glow); color: var(--green); }
+.quiz-option.wrong   { border-color: var(--red);   background: var(--red-glow);   color: var(--red);   }
+.quiz-option:disabled { cursor: default; }
+.option-key {
+  width: 24px; height: 24px;
+  border-radius: 4px;
+  background: var(--surface3);
+  border: 1px solid var(--border);
+  display: flex; align-items: center; justify-content: center;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--text-muted);
+  flex-shrink: 0;
+}
+.quiz-feedback {
+  margin-top: 16px;
+  padding: 14px 18px;
+  border-radius: var(--radius);
+  font-size: 14px;
+  line-height: 1.6;
+  display: none;
+}
+.quiz-feedback.show { display: block; }
+.quiz-feedback.correct { background: var(--green-glow); border: 1px solid var(--green-dim); color: var(--green); }
+.quiz-feedback.wrong   { background: var(--red-glow);   border: 1px solid var(--red-dim);   color: var(--red);   }
+.quiz-feedback strong  { display: block; margin-bottom: 4px; }
+.quiz-nav {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 20px 24px;
+  border-top: 1px solid var(--border);
+  background: var(--surface2);
+}
+.quiz-progress-dots {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+.q-dot {
+  width: 8px; height: 8px;
+  border-radius: 50%;
+  background: var(--border);
+  transition: var(--transition);
+}
+.q-dot.done    { background: var(--green); }
+.q-dot.current { background: var(--amber); }
+.q-dot.wrong   { background: var(--red); }
+
+/* ── BUTTONS ────────────────────────────────────────────── */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 20px;
+  border-radius: var(--radius);
+  font-family: var(--font-body);
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  border: none;
+  transition: var(--transition);
+  text-decoration: none;
+  white-space: nowrap;
+}
+.btn-primary {
+  background: var(--amber);
+  color: var(--bg);
+}
+.btn-primary:hover { background: #ffc233; box-shadow: var(--glow-amber); }
+.btn-secondary {
+  background: var(--surface2);
+  color: var(--text);
+  border: 1px solid var(--border);
+}
+.btn-secondary:hover { border-color: var(--border2); background: var(--surface3); }
+.btn-ghost {
+  background: transparent;
+  color: var(--text-muted);
+  border: 1px solid var(--border);
+}
+.btn-ghost:hover { color: var(--text); background: var(--surface2); }
+.btn:disabled { opacity: 0.4; cursor: not-allowed; }
+.btn-sm { padding: 7px 14px; font-size: 13px; }
+.btn-lg { padding: 14px 28px; font-size: 16px; }
+
+/* ── MODE TABS ──────────────────────────────────────────── */
+.mode-tabs {
+  display: flex;
+  gap: 4px;
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 4px;
+  width: fit-content;
+  margin-bottom: 28px;
+}
+.mode-tab {
+  padding: 8px 20px;
+  border-radius: 6px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  border: none;
+  background: transparent;
+  color: var(--text-muted);
+  transition: var(--transition);
+}
+.mode-tab.active { background: var(--surface3); color: var(--amber); }
+.mode-tab:hover:not(.active) { color: var(--text); }
+
+/* ── CALLOUT BOXES ──────────────────────────────────────── */
+.callout {
+  padding: 16px 20px;
+  border-radius: var(--radius);
+  border-left: 3px solid;
+  margin: 20px 0;
+  font-size: 14px;
+  line-height: 1.6;
+}
+.callout-amber { background: var(--amber-glow); border-color: var(--amber); }
+.callout-cyan  { background: var(--cyan-glow);  border-color: var(--cyan);  }
+.callout-green { background: var(--green-glow); border-color: var(--green); }
+.callout-red   { background: var(--red-glow);   border-color: var(--red);   }
+.callout strong { font-weight: 700; }
+
+/* ── DATA TABLE ─────────────────────────────────────────── */
+.data-table { width: 100%; border-collapse: collapse; font-size: 14px; }
+.data-table th {
+  background: var(--surface2);
+  color: var(--text-muted);
+  font-family: var(--font-mono);
+  font-size: 10px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  padding: 10px 14px;
+  text-align: left;
+  border-bottom: 1px solid var(--border);
+}
+.data-table td {
+  padding: 11px 14px;
+  border-bottom: 1px solid var(--border);
+  color: var(--text);
+  vertical-align: top;
+}
+.data-table tr:last-child td { border-bottom: none; }
+.data-table tr:hover td { background: var(--surface2); }
+.tag {
+  display: inline-flex;
+  align-items: center;
+  padding: 2px 8px;
+  border-radius: 4px;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 600;
+}
+.tag-phantom { background: var(--cyan-glow);  color: var(--cyan);  border: 1px solid var(--cyan-dim);  }
+.tag-polarity{ background: var(--amber-glow); color: var(--amber); border: 1px solid var(--amber-dim); }
+.tag-local   { background: var(--green-glow); color: var(--green); border: 1px solid var(--green-dim); }
+.tag-pending { background: var(--red-glow);   color: var(--red);   border: 1px solid var(--red-dim);   }
+.tag-rack    { background: var(--surface3);   color: var(--text-muted); border: 1px solid var(--border); }
+
+/* ── SCORE SUMMARY ──────────────────────────────────────── */
+.score-summary {
+  text-align: center;
+  padding: 48px 24px;
+}
+.score-display {
+  font-family: var(--font-head);
+  font-size: 72px;
+  font-weight: 800;
+  color: var(--amber);
+  line-height: 1;
+  margin-bottom: 8px;
+}
+.score-label { font-size: 16px; color: var(--text-muted); margin-bottom: 28px; }
+.score-breakdown {
+  display: flex;
+  gap: 24px;
+  justify-content: center;
+  margin-bottom: 32px;
+  flex-wrap: wrap;
+}
+.score-stat {
+  text-align: center;
+  padding: 16px 24px;
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  min-width: 100px;
+}
+.score-stat-val { font-family: var(--font-head); font-size: 28px; font-weight: 700; color: var(--text); }
+.score-stat-key { font-size: 12px; color: var(--text-muted); margin-top: 2px; }
+
+/* ── SITE FOOTER ────────────────────────────────────────── */
+.site-footer {
+  border-top: 1px solid var(--border);
+  padding: 28px 24px;
+  text-align: center;
+  font-size: 13px;
+  color: var(--text-muted);
+  margin-top: 80px;
+}
+.site-footer a { color: var(--amber); text-decoration: none; }
+.site-footer a:hover { text-decoration: underline; }
+
+/* ── RESPONSIVE ─────────────────────────────────────────── */
+@media (max-width: 768px) {
+  .module-grid { grid-template-columns: 1fr; }
+  .ref-grid    { grid-template-columns: 1fr 1fr; }
+  .hero { padding: 40px 0 32px; }
+  .site-nav { display: none; }
+  .score-breakdown { flex-direction: column; align-items: center; }
+}
+@media (max-width: 480px) {
+  .ref-grid { grid-template-columns: 1fr; }
+  .hero-meta { flex-direction: column; gap: 12px; }
+}
+</style>
+</head>
+<body>
+<header class="site-header">
+  <div class="site-header-inner">
+    <a href="../index.html" class="site-logo">
+      <div class="site-logo-mark">FL</div>
+      <div><span class="site-logo-text">Family Life Worship Center</span>
+      <span class="site-logo-sub">Sound &amp; Tech Training</span></div>
+    </a>
+    <nav class="site-nav">
+      <a href="../../index.html">Portal</a>
+      <a href="../index.html">Sound &amp; Tech</a>
+      <a href="iem-mixes.html" class="active">IEM Monitor Mixes</a>
+    </nav>
+  </div>
+</header>
+
+<div style="background:var(--surface);border-bottom:1px solid var(--border);">
+  <div class="container">
+    <div style="padding:12px 0;font-family:var(--font-mono);font-size:11px;color:var(--text-muted);display:flex;align-items:center;gap:8px;">
+      <a href="../../index.html" style="color:var(--text-muted);text-decoration:none;">Portal</a>
+      <span style="color:var(--text-dim);">›</span>
+      <a href="../index.html" style="color:var(--text-muted);text-decoration:none;">Sound &amp; Tech</a>
+      <span style="color:var(--text-dim);">›</span>
+      <span style="color:var(--text);">IEM Monitor Mixes</span>
+    </div>
+  </div>
+</div>
+
+<div class="module-page">
+<div class="container">
+
+  <div class="module-page-header">
+    <div style="display:flex;align-items:center;gap:12px;margin-bottom:12px;">
+      <span class="module-badge badge-quiz">Quiz</span>
+    </div>
+    <h1 class="module-page-title">IEM Monitor Mixes</h1>
+    <p class="module-page-desc">What a performer hears in their IEM affects their confidence, their pitch, and their ability to serve. Building a great monitor mix is an act of service to the team on stage.</p>
+  </div>
+
+  <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;flex-wrap:wrap;gap:12px;">
+    <div style="display:flex;gap:6px;flex-wrap:wrap;" id="dot-row"></div>
+    <div style="font-family:var(--font-mono);font-size:13px;color:var(--text-muted);">
+      Score: <span id="score-val" style="color:var(--amber);font-weight:600;">0</span>
+      / <span id="total-val">10</span>
+      &nbsp;·&nbsp; <span id="q-counter" style="color:var(--text-muted);">Question 1 of 10</span>
+    </div>
+  </div>
+
+  <div class="quiz-container" id="quiz-wrap">
+    <div class="quiz-header">
+      <span class="quiz-title" id="q-section">—</span>
+      <span style="font-family:var(--font-mono);font-size:11px;color:var(--text-muted);" id="q-tag"></span>
+    </div>
+    <div class="quiz-body">
+      <div class="quiz-question" id="q-text"></div>
+      <div class="quiz-options" id="q-opts"></div>
+      <div class="quiz-feedback" id="q-fb"></div>
+    </div>
+    <div class="quiz-nav">
+      <div class="quiz-progress-dots" id="dot-row2"></div>
+      <button class="btn btn-primary btn-sm" id="btn-next" onclick="next()" disabled>Next →</button>
+    </div>
+  </div>
+
+  <div id="final-wrap" style="display:none;">
+    <div class="quiz-container">
+      <div class="score-summary">
+        <div class="score-display" id="fin-num">0/10</div>
+        <div class="score-label" id="fin-label"></div>
+        <div class="score-breakdown">
+          <div class="score-stat"><div class="score-stat-val" id="fin-correct">0</div><div class="score-stat-key">Correct</div></div>
+          <div class="score-stat"><div class="score-stat-val" id="fin-wrong">0</div><div class="score-stat-key">Incorrect</div></div>
+          <div class="score-stat"><div class="score-stat-val" id="fin-pct">0%</div><div class="score-stat-key">Score</div></div>
+        </div>
+        <div style="display:flex;gap:12px;justify-content:center;flex-wrap:wrap;">
+          <button class="btn btn-primary btn-lg" onclick="restart()">↺ Retake</button>
+          <a href="../index.html" class="btn btn-secondary btn-lg">All Modules</a>
+          <a href="service-flow.html" class="btn btn-ghost btn-lg">Next: Service Flow →</a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+</div>
+
+<footer class="site-footer">
+  <div class="container">
+    <a href="eq-compression.html">← EQ & Compression</a> &nbsp;·&nbsp;
+    FLWC Sound &amp; Tech Training
+    &nbsp;·&nbsp; <a href="service-flow.html">Service Flow →</a>
+  </div>
+</footer>
+
+<script>
+const QS = [{"section": "IEM Fundamentals", "q": "What is the primary purpose of an IEM monitor mix?", "options": [{"text": "To give the performer a copy of the FOH house mix", "correct": false}, {"text": "To provide a custom blend of the full stage so the performer can hear themselves and the musicians they need to lock in with", "correct": true}, {"text": "To protect the performer's hearing from stage volume", "correct": false}, {"text": "To allow the FOH operator to monitor the mix without headphones", "correct": false}], "explanation": "An IEM mix is purpose-built for one performer. It is not the house mix. Each performer needs to hear themselves clearly and the instruments they depend on to stay in pitch and tempo. Everything else fills in around that core."}, {"section": "IEM Fundamentals", "q": "In your system, how many independent IEM mixes are running?", "options": [{"text": "2 — one for vocals, one for band", "correct": false}, {"text": "4 — one per Shure beltpack", "correct": false}, {"text": "6 — four Shure and two Sennheiser", "correct": true}, {"text": "16 — one per mix bus", "correct": false}], "explanation": "Six independent mixes: four Shure beltpack transmitters and two Sennheiser beltpack transmitters. Each receives its own custom mix from a dedicated aux bus output on the X32."}, {"section": "Sends on Fader", "q": "What does Sends on Fader mode do on the X32?", "options": [{"text": "Automatically sets all channel sends to the same level", "correct": false}, {"text": "Transforms the fader bank to show each channel's send level to the selected bus", "correct": true}, {"text": "Locks the FOH faders to prevent accidental changes while building monitors", "correct": false}, {"text": "Sends the FOH mix directly to all IEM outputs simultaneously", "correct": false}], "explanation": "Sends on Fader transforms the left channel fader bank so every fader shows its send level to the currently selected bus. This lets you build or adjust an entire IEM mix from the fader bank without touching the processing section."}, {"section": "Sends on Fader", "q": "What is the correct sequence for building an IEM mix using Sends on Fader?", "options": [{"text": "Press Sends on Fader, then select the bus, then adjust faders", "correct": false}, {"text": "Select the bus master fader, press Sends on Fader, adjust faders, press Sends on Fader again to exit", "correct": true}, {"text": "Mute the house first, then adjust sends, then unmute", "correct": false}, {"text": "Select each channel individually and adjust its bus send from the channel screen", "correct": false}], "explanation": "The correct sequence: (1) Press SELECT on the bus master fader for the IEM mix you want to build. (2) Press SENDS ON FADER. (3) Adjust channel faders to build the mix. (4) Press SENDS ON FADER again to exit. FOH faders are fully restored — nothing you did changes the house mix."}, {"section": "Pre vs Post Fader", "q": "An IEM send configured as <em>pre-fader</em> means which of the following?", "options": [{"text": "The performer's mix changes whenever you move the FOH fader", "correct": false}, {"text": "The performer's mix is independent of FOH fader position — moving a FOH fader does not affect what they hear", "correct": true}, {"text": "The send level is fixed and cannot be adjusted", "correct": false}, {"text": "The send is automatically set to unity gain", "correct": false}], "explanation": "Pre-fader sends tap the signal before the channel fader. Moving the FOH fader up or down has no effect on what the performer hears. This is generally the preferred configuration for IEM mixes — the performer's world stays stable regardless of what you do at FOH."}, {"section": "Pre vs Post Fader", "q": "Your recording and livestream buses are configured as <em>post-fader</em>. What does this mean operationally?", "options": [{"text": "Recording and livestream levels cannot be adjusted independently", "correct": false}, {"text": "FOH fader changes directly affect both the recording and the livestream output", "correct": true}, {"text": "The buses are muted whenever a fader is pulled down", "correct": false}, {"text": "Recording and livestream are always at unity regardless of FOH", "correct": false}], "explanation": "Post-fader sends tap the signal after the channel fader. Any fader move at FOH ripples through to every post-fader bus connected to that channel — including recording and livestream. This is intentional: your stream audience hears what the congregation hears."}, {"section": "IEM Troubleshooting", "q": "A performer reports their IEM is completely silent. What do you check first?", "options": [{"text": "Check the beltpack battery and power state", "correct": false}, {"text": "Check whether the channel is muted — mute affects all outputs including IEM sends", "correct": true}, {"text": "Rebuild their entire IEM mix from scratch", "correct": false}, {"text": "Check the AES50 connection to the S32", "correct": false}], "explanation": "A muted channel is muted from all outputs — FOH AND IEM sends. It is the most common and fastest thing to check. The channel mute button being lit is the first thing to look for when a performer reports silence in their IEM."}, {"section": "IEM Troubleshooting", "q": "A performer says their IEM mix is too quiet even with the beltpack volume at maximum. Where is the problem most likely?", "options": [{"text": "The performer needs a higher-powered beltpack", "correct": false}, {"text": "The output level from the X32 aux output feeding the transmitter is too low, or the transmitter input gain is mismatched", "correct": true}, {"text": "The IEM mix send levels need to be higher across all channels", "correct": false}, {"text": "The master LR fader needs to be increased", "correct": false}], "explanation": "If the beltpack is at maximum volume but the mix is still too quiet, the issue is upstream — either the X32 aux output level (the bus master fader for that IEM mix) is too low, or the transmitter's input gain is not matched to the output level from the board."}, {"section": "IEM Best Practice", "q": "What is the golden rule of building an IEM mix for a performer?", "options": [{"text": "Match the house mix as closely as possible so everyone hears the same thing", "correct": false}, {"text": "Start with the performer's own instrument or voice prominent, then build the other elements around that core", "correct": true}, {"text": "Keep all levels equal so no instrument dominates", "correct": false}, {"text": "Ask the performer what they want and set it exactly as described without using your ears", "correct": false}], "explanation": "Every performer's IEM mix starts with what they need most — their own voice or instrument — prominent and clear. Then add the instruments they lock in with (drummer adds click and bass; vocalist adds lead vocal and keys). Everything else fills in subordinately."}, {"section": "IEM Best Practice", "q": "What is the most preventable IEM failure in live production?", "options": [{"text": "Frequency interference between transmitters", "correct": false}, {"text": "Dead batteries in beltpacks", "correct": true}, {"text": "Incorrect bus routing configuration", "correct": false}, {"text": "AES50 signal dropout", "correct": false}], "explanation": "Dead batteries cause more IEM failures than any other single issue. Confirm all beltpacks are charged and powered on before every service. It takes 30 seconds during pre-service setup and eliminates the most common IEM problem completely."}];
+const KEY = 'flwc-module-iem-mixes';
+let cur=0,score=0,answered=false,shuffled=[];
+
+function shuf(a){return[...a].sort(()=>Math.random()-.5);}
+
+function init(){
+  shuffled=shuf(QS); cur=0; score=0; answered=false;
+  document.getElementById('final-wrap').style.display='none';
+  document.getElementById('quiz-wrap').style.display='block';
+  buildDots(); render();
+}
+
+function buildDots(){
+  ['dot-row','dot-row2'].forEach(id=>{
+    const el=document.getElementById(id); el.innerHTML='';
+    shuffled.forEach((_,i)=>{
+      const d=document.createElement('div');
+      d.className='q-dot'+(i===0?' current':'');
+      d.id=id+'-'+i; el.appendChild(d);
+    });
+  });
+}
+
+function setDot(i,cls){
+  ['dot-row','dot-row2'].forEach(id=>{
+    const el=document.getElementById(id+'-'+i);
+    if(el) el.className='q-dot '+cls;
+  });
+}
+
+function render(){
+  const q=shuffled[cur];
+  document.getElementById('q-counter').textContent=`Question ${cur+1} of ${shuffled.length}`;
+  document.getElementById('q-section').textContent=q.section||'';
+  document.getElementById('q-text').innerHTML=q.q;
+  document.getElementById('q-fb').className='quiz-feedback';
+  document.getElementById('q-fb').innerHTML='';
+  document.getElementById('btn-next').disabled=true;
+  document.getElementById('btn-next').textContent=cur===shuffled.length-1?'See Results →':'Next →';
+  answered=false;
+  const keys=['A','B','C','D'];
+  const opts=shuf(q.options);
+  const container=document.getElementById('q-opts');
+  container.innerHTML='';
+  opts.forEach((opt,i)=>{
+    const btn=document.createElement('button');
+    btn.className='quiz-option';
+    btn.innerHTML=`<span class="option-key">${keys[i]}</span>${opt.text}`;
+    btn.onclick=()=>select(btn,opt,opts);
+    container.appendChild(btn);
+  });
+  setDot(cur,'current');
+  document.getElementById('score-val').textContent=score;
+}
+
+function select(btn,opt,opts){
+  if(answered)return;
+  answered=true;
+  document.querySelectorAll('.quiz-option').forEach(b=>{
+    b.disabled=true;
+    if(opts.find(o=>o.correct)?.text===b.textContent.slice(1)) b.classList.add('correct');
+  });
+  if(!opt.correct) btn.classList.add('wrong');
+  const fb=document.getElementById('q-fb');
+  if(opt.correct){
+    score++;
+    setDot(cur,'done');
+    fb.className='quiz-feedback correct show';
+    fb.innerHTML=`<strong>✅ Correct.</strong> ${shuffled[cur].explanation}`;
+  } else {
+    setDot(cur,'wrong');
+    fb.className='quiz-feedback wrong show';
+    fb.innerHTML=`<strong>❌ Incorrect.</strong> The correct answer is: <em>${opts.find(o=>o.correct)?.text}</em>. ${shuffled[cur].explanation}`;
+  }
+  document.getElementById('score-val').textContent=score;
+  document.getElementById('btn-next').disabled=false;
+}
+
+function next(){
+  if(cur>=shuffled.length-1){showFinal();return;}
+  cur++; render();
+}
+
+function showFinal(){
+  const total=shuffled.length,pct=Math.round(score/total*100);
+  document.getElementById('quiz-wrap').style.display='none';
+  document.getElementById('final-wrap').style.display='block';
+  document.getElementById('fin-num').textContent=`${score}/${total}`;
+  document.getElementById('fin-correct').textContent=score;
+  document.getElementById('fin-wrong').textContent=total-score;
+  document.getElementById('fin-pct').textContent=pct+'%';
+  document.getElementById('fin-label').textContent=
+    pct>=90?'🏆 Outstanding — you are ready for FOH.':
+    pct>=75?'✅ Strong result. Review what you missed.':
+    pct>=60?'📚 Good start — retake to reinforce.':
+            '🔁 Keep studying. Every run builds retention.';
+  localStorage.setItem(KEY,JSON.stringify({score,total,pct,date:new Date().toISOString()}));
+}
+
+function restart(){init();}
+document.addEventListener('DOMContentLoaded',init);
+</script>
+</body>
+</html>

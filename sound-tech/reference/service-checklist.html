@@ -1,0 +1,418 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Service Day Checklist — FLWC Sound & Tech</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Oxanium:wght@400;600;700;800&family=DM+Sans:ital,wght@0,400;0,500;0,600;1,400&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing:border-box; margin:0; padding:0; }
+    :root {
+      --bg:#09090f; --surface:#111118; --surface2:#1a1a26;
+      --border:#2a2a40; --border2:#3a3a58;
+      --amber:#f0a500; --amber-dim:#7a5200; --amber-glow:rgba(240,165,0,0.12);
+      --green:#3dd68c; --green-dim:#0d4a27; --green-glow:rgba(61,214,140,0.10);
+      --red:#f25c54; --red-glow:rgba(242,92,84,0.10); --red-dim:#4a0d0a;
+      --text:#e8e8f0; --text-muted:#7070a0; --text-dim:#404060;
+      --font-head:'Oxanium',sans-serif; --font-body:'DM Sans',sans-serif; --font-mono:'JetBrains Mono',monospace;
+      --radius:8px; --radius-lg:14px; --transition:all 0.18s ease;
+    }
+    body { font-family:var(--font-body); background:var(--bg); color:var(--text); font-size:16px; line-height:1.6; -webkit-font-smoothing:antialiased; }
+
+    .site-header { background:var(--surface); border-bottom:1px solid var(--border); padding:0 24px; position:sticky; top:0; z-index:100; }
+    .site-header-inner { max-width:1140px; margin:0 auto; display:flex; align-items:center; justify-content:space-between; height:60px; }
+    .site-logo { display:flex; align-items:center; gap:12px; text-decoration:none; }
+    .site-logo-mark { width:34px; height:34px; background:var(--amber); border-radius:6px; display:flex; align-items:center; justify-content:center; font-family:var(--font-head); font-size:14px; font-weight:800; color:var(--bg); }
+    .site-logo-text { font-family:var(--font-head); font-size:15px; font-weight:700; color:var(--text); }
+    .site-logo-sub { font-size:10px; color:var(--text-muted); display:block; line-height:1; margin-top:1px; text-transform:uppercase; letter-spacing:0.5px; }
+    .site-nav { display:flex; gap:4px; }
+    .site-nav a { color:var(--text-muted); text-decoration:none; font-size:13px; font-weight:500; padding:6px 12px; border-radius:var(--radius); }
+    .site-nav a:hover { color:var(--text); background:var(--surface2); }
+    .site-nav a.active { color:var(--amber); }
+    .breadcrumb-bar { background:var(--surface); border-bottom:1px solid var(--border); padding:10px 24px; font-family:var(--font-mono); font-size:11px; color:var(--text-muted); }
+    .breadcrumb-bar a { color:var(--text-muted); text-decoration:none; }
+    .breadcrumb-bar span { color:var(--text-dim); margin:0 6px; }
+
+    .page-wrap { max-width:900px; margin:0 auto; padding:40px 24px 80px; }
+    .page-header { margin-bottom:32px; padding-bottom:24px; border-bottom:1px solid var(--border); }
+    .page-eyebrow { font-family:var(--font-mono); font-size:10px; font-weight:600; letter-spacing:2.5px; text-transform:uppercase; color:var(--amber); margin-bottom:8px; }
+    .page-title { font-family:var(--font-head); font-size:clamp(24px,4vw,36px); font-weight:800; color:var(--text); margin-bottom:8px; }
+    .page-desc { font-size:15px; color:var(--text-muted); max-width:580px; line-height:1.65; }
+    .header-row { display:flex; align-items:center; gap:16px; flex-wrap:wrap; margin-top:16px; }
+    .print-btn { display:inline-flex; align-items:center; gap:8px; padding:8px 18px; background:var(--surface2); border:1px solid var(--border); border-radius:var(--radius); color:var(--text-muted); font-size:13px; font-weight:600; cursor:pointer; font-family:var(--font-body); }
+    .print-btn:hover { color:var(--text); border-color:var(--border2); }
+    .reset-btn { display:inline-flex; align-items:center; gap:8px; padding:8px 18px; background:var(--green-glow); border:1px solid var(--green-dim); border-radius:var(--radius); color:var(--green); font-size:13px; font-weight:600; cursor:pointer; font-family:var(--font-body); }
+    .reset-btn:hover { background:rgba(61,214,140,0.18); }
+
+    .section-label { font-family:var(--font-mono); font-size:10px; font-weight:600; text-transform:uppercase; letter-spacing:2px; color:var(--text-muted); margin:28px 0 16px; display:flex; align-items:center; gap:12px; }
+    .section-label::after { content:''; flex:1; height:1px; background:var(--border); }
+    .phase-tag { font-family:var(--font-mono); font-size:9px; font-weight:700; text-transform:uppercase; letter-spacing:1.5px; padding:2px 8px; border-radius:3px; }
+    .phase-pre  { background:var(--amber-glow); color:var(--amber); border:1px solid var(--amber-dim); }
+    .phase-line { background:rgba(0,212,255,0.15); color:#00d4ff; border:1px solid #004d5e; }
+    .phase-service { background:var(--green-glow); color:var(--green); border:1px solid var(--green-dim); }
+    .phase-post { background:rgba(192,132,252,0.15); color:#c084fc; border:1px solid #4a1d7a; }
+
+    /* Checklist items */
+    .checklist { display:flex; flex-direction:column; gap:4px; margin-bottom:12px; }
+    .check-item {
+      display:flex; align-items:flex-start; gap:14px;
+      background:var(--surface); border:1px solid var(--border);
+      border-radius:var(--radius); padding:14px 16px;
+      cursor:pointer; transition:var(--transition); position:relative;
+    }
+    .check-item:hover { border-color:var(--border2); background:var(--surface2); }
+    .check-item.done { border-color:var(--green-dim); background:var(--green-glow); }
+    .check-item.done .check-label { color:var(--text-muted); text-decoration:line-through; }
+    .check-box {
+      width:22px; height:22px; border:2px solid var(--border2);
+      border-radius:5px; flex-shrink:0; display:flex;
+      align-items:center; justify-content:center;
+      transition:var(--transition); margin-top:1px;
+      font-size:13px;
+    }
+    .check-item.done .check-box { background:var(--green); border-color:var(--green); }
+    .check-content { flex:1; }
+    .check-label { font-size:14px; font-weight:600; color:var(--text); margin-bottom:3px; line-height:1.4; }
+    .check-note { font-size:12px; color:var(--text-muted); line-height:1.5; }
+    .check-critical { position:absolute; right:12px; top:50%; transform:translateY(-50%); font-family:var(--font-mono); font-size:9px; font-weight:700; color:var(--red); text-transform:uppercase; letter-spacing:1px; }
+
+    .progress-bar-wrap { background:var(--surface); border:1px solid var(--border); border-radius:var(--radius-lg); padding:16px 20px; margin-bottom:32px; display:flex; align-items:center; gap:16px; }
+    .progress-bar { flex:1; height:6px; background:var(--border); border-radius:3px; overflow:hidden; }
+    .progress-fill { height:100%; background:linear-gradient(90deg,var(--amber),var(--green)); border-radius:3px; transition:width 0.4s ease; }
+    .progress-label { font-family:var(--font-mono); font-size:13px; font-weight:600; color:var(--amber); flex-shrink:0; min-width:60px; text-align:right; }
+
+    .notes-section { background:var(--surface); border:1px solid var(--border); border-radius:var(--radius-lg); padding:20px; margin-top:32px; }
+    .notes-title { font-family:var(--font-mono); font-size:11px; font-weight:600; text-transform:uppercase; letter-spacing:1.5px; color:var(--text-muted); margin-bottom:12px; }
+    .notes-field { width:100%; background:var(--surface2); border:1px solid var(--border); border-radius:var(--radius); padding:12px 14px; color:var(--text); font-family:var(--font-body); font-size:14px; resize:vertical; min-height:100px; line-height:1.6; }
+    .notes-field:focus { outline:none; border-color:var(--amber); }
+    .notes-field::placeholder { color:var(--text-dim); }
+
+    /* ── PRINT ───────────────────────────────────────────── */
+    @media print {
+      * { -webkit-print-color-adjust:exact !important; print-color-adjust:exact !important; }
+      body { background:#fff !important; color:#111 !important; font-size:10pt; }
+      .site-header,.breadcrumb-bar,.header-row .reset-btn,.progress-bar-wrap,.notes-section,footer { display:none !important; }
+      .print-btn { display:none !important; }
+      .page-wrap { padding:0; max-width:100%; }
+      .page-header { border-bottom:2px solid #333; padding-bottom:10pt; margin-bottom:16pt; }
+      .page-eyebrow { color:#c27a00 !important; font-size:7pt; }
+      .page-title { color:#111 !important; font-size:18pt; margin-bottom:3pt; }
+      .page-desc { color:#444 !important; font-size:9pt; }
+      .section-label { color:#444 !important; font-size:7pt; margin:14pt 0 8pt; }
+      .section-label::after { background:#ccc; }
+      .phase-pre  { background:#fef3cd !important; color:#8a5500 !important; border-color:#d4a800 !important; }
+      .phase-line { background:#e0f7fd !important; color:#004060 !important; border-color:#80c0d8 !important; }
+      .phase-service { background:#e8f8f0 !important; color:#1a6040 !important; border-color:#80c0a0 !important; }
+      .phase-post { background:#f3e8fe !important; color:#500080 !important; border-color:#c080e0 !important; }
+      .checklist { gap:3pt; margin-bottom:8pt; }
+      .check-item { background:#fafafa !important; border:1px solid #ccc !important; padding:8pt 10pt; border-radius:3pt; page-break-inside:avoid; }
+      .check-item:hover { background:#fafafa !important; border-color:#ccc !important; }
+      .check-box { border:1.5pt solid #999 !important; width:16pt; height:16pt; border-radius:3pt; background:#fff !important; }
+      .check-label { color:#111 !important; font-size:10pt; }
+      .check-note { color:#555 !important; font-size:8pt; }
+      .check-critical { color:#c00 !important; font-size:8pt; }
+      .print-header { display:block !important; text-align:center; margin-bottom:12pt; padding-bottom:8pt; border-bottom:1px solid #ccc; }
+      .print-header-title { font-size:8pt; color:#888; }
+      .print-notes { display:block !important; margin-top:20pt; border-top:1px solid #ccc; padding-top:12pt; }
+      .print-notes-title { font-size:9pt; font-weight:bold; color:#333; margin-bottom:8pt; }
+      .print-note-line { border-bottom:1pt solid #ccc; height:20pt; margin-bottom:4pt; }
+      @page { margin:0.75in; size:letter; }
+    }
+    .print-header { display:none; }
+    .print-notes { display:none; }
+  </style>
+</head>
+<body>
+
+<header class="site-header">
+  <div class="site-header-inner">
+    <a href="../index.html" class="site-logo">
+      <div class="site-logo-mark">FL</div>
+      <div><span class="site-logo-text">Family Life Worship Center</span>
+      <span class="site-logo-sub">Sound &amp; Tech Training</span></div>
+    </a>
+    <nav class="site-nav">
+      <a href="../../index.html">Portal</a>
+      <a href="../index.html">Sound &amp; Tech</a>
+      <a href="service-checklist.html" class="active">Service Checklist</a>
+    </nav>
+  </div>
+</header>
+<div class="breadcrumb-bar">
+  <a href="../../index.html">Portal</a><span>›</span>
+  <a href="../index.html">Sound &amp; Tech</a><span>›</span>
+  Reference<span>›</span>Service Day Checklist
+</div>
+
+<div class="page-wrap">
+  <div class="print-header"><div class="print-header-title">Family Life Worship Center — Service Day Checklist &nbsp;·&nbsp; Date: _______________ &nbsp;·&nbsp; Operator: _______________</div></div>
+
+  <div class="page-header">
+    <div class="page-eyebrow">Reference — Every Sunday</div>
+    <h1 class="page-title">Service Day Checklist</h1>
+    <p class="page-desc">Complete every item in order before the congregation arrives. If any item cannot be completed, escalate to the tech director immediately — not at the service transition where it becomes visible.</p>
+    <div class="header-row">
+      <button class="print-btn" onclick="window.print()">🖨 Print This Page</button>
+      <button class="reset-btn" onclick="resetAll()">↺ Reset All</button>
+    </div>
+  </div>
+
+  <!-- Progress -->
+  <div class="progress-bar-wrap" id="progress-wrap">
+    <div style="font-family:var(--font-mono);font-size:12px;color:var(--text-muted);flex-shrink:0;">Progress</div>
+    <div class="progress-bar"><div class="progress-fill" id="progress-fill" style="width:0%"></div></div>
+    <div class="progress-label" id="progress-label">0 / 0</div>
+  </div>
+
+  <!-- PHASE 1: POWER UP -->
+  <div class="section-label"><span class="phase-tag phase-pre">Phase 1</span> Power Up &amp; Board Load</div>
+  <div class="checklist" id="phase-1">
+    <div class="check-item" onclick="toggle(this)">
+      <div class="check-box"></div>
+      <div class="check-content">
+        <div class="check-label">Power on stage equipment and S32 stage box</div>
+        <div class="check-note">Stage power first. Confirm S32 power LED is solid — no blinking. Blinking indicates no AES50 link yet.</div>
+      </div>
+    </div>
+    <div class="check-item" onclick="toggle(this)">
+      <div class="check-box"></div>
+      <div class="check-content">
+        <div class="check-label">Power on the X32</div>
+        <div class="check-note">Allow 15 seconds for full boot. Do not interrupt power during boot sequence.</div>
+      </div>
+    </div>
+    <div class="check-item" onclick="toggle(this)">
+      <div class="check-box"></div>
+      <div class="check-content">
+        <div class="check-label">Load your baseline scene</div>
+        <div class="check-note">Scenes menu → navigate to your baseline scene → LOAD → confirm. Verify channel names on scribble strips match the routing reference.</div>
+      </div>
+      <div class="check-critical">Critical</div>
+    </div>
+    <div class="check-item" onclick="toggle(this)">
+      <div class="check-box"></div>
+      <div class="check-content">
+        <div class="check-label">Confirm AES50 link — S32 connected via CAT6</div>
+        <div class="check-note">ROUTING tab → AES50 A — confirm signal present on all S32 channels. If no link, check CAT6 cable at both ends.</div>
+      </div>
+      <div class="check-critical">Critical</div>
+    </div>
+    <div class="check-item" onclick="toggle(this)">
+      <div class="check-box"></div>
+      <div class="check-content">
+        <div class="check-label">Power on amplifiers and powered speakers — last</div>
+        <div class="check-note">Amps always go on last. Confirm main LR fader is down before powering amps. Bring it up slowly after amps are on.</div>
+      </div>
+      <div class="check-critical">Critical</div>
+    </div>
+  </div>
+
+  <!-- PHASE 2: LINE CHECK -->
+  <div class="section-label"><span class="phase-tag phase-line">Phase 2</span> Line Check</div>
+  <div class="checklist" id="phase-2">
+    <div class="check-item" onclick="toggle(this)">
+      <div class="check-box"></div>
+      <div class="check-content">
+        <div class="check-label">Enable phantom power on all condenser and active DI channels</div>
+        <div class="check-note">Verify 48V is active on required channels before setting gain. Check your channel routing reference for which channels require phantom.</div>
+      </div>
+    </div>
+    <div class="check-item" onclick="toggle(this)">
+      <div class="check-box"></div>
+      <div class="check-content">
+        <div class="check-label">Run line check — all drum channels in order</div>
+        <div class="check-note">Kick, snare, toms, hi-hat, overheads. Set gain at performance level — not a tap, a real hit. Target –18 dBFS average with fader at unity.</div>
+      </div>
+    </div>
+    <div class="check-item" onclick="toggle(this)">
+      <div class="check-box"></div>
+      <div class="check-content">
+        <div class="check-label">Run line check — bass, guitars, keys, pads</div>
+        <div class="check-note">Each instrument plays at performance level. Confirm signal on meter, set gain, move to next.</div>
+      </div>
+    </div>
+    <div class="check-item" onclick="toggle(this)">
+      <div class="check-box"></div>
+      <div class="check-content">
+        <div class="check-label">Run line check — all vocal channels</div>
+        <div class="check-note">Each vocalist sings at full performance level — not a test whisper. The gain you set for quiet will clip when they open up during worship.</div>
+      </div>
+      <div class="check-critical">Critical</div>
+    </div>
+    <div class="check-item" onclick="toggle(this)">
+      <div class="check-box"></div>
+      <div class="check-content">
+        <div class="check-label">Confirm all wireless receiver channels — signal present</div>
+        <div class="check-note">Check VM1, VM2, VM3, SPKR1, SPKR2, Sermon Headset. Wireless must show active RF signal at receiver before the service.</div>
+      </div>
+    </div>
+    <div class="check-item" onclick="toggle(this)">
+      <div class="check-box"></div>
+      <div class="check-content">
+        <div class="check-label">Confirm Spotify / playback source routing and level</div>
+        <div class="check-note">AUX IN active, stereo pair linked, playback bus at reference pre-service level. Confirm no bleed into live channels.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- PHASE 3: IEM SETUP -->
+  <div class="section-label"><span class="phase-tag phase-line">Phase 3</span> IEM Setup</div>
+  <div class="checklist" id="phase-3">
+    <div class="check-item" onclick="toggle(this)">
+      <div class="check-box"></div>
+      <div class="check-content">
+        <div class="check-label">Confirm all IEM beltpacks are charged and powered on</div>
+        <div class="check-note">4 Shure, 2 Sennheiser. Dead batteries are the most preventable IEM failure. Check before performers arrive.</div>
+      </div>
+      <div class="check-critical">Critical</div>
+    </div>
+    <div class="check-item" onclick="toggle(this)">
+      <div class="check-box"></div>
+      <div class="check-content">
+        <div class="check-label">Build IEM mixes with performers on stage</div>
+        <div class="check-note">Use Sends on Fader for each bus. Each performer confirms their mix before leaving the stage. Do not skip this step.</div>
+      </div>
+      <div class="check-critical">Critical</div>
+    </div>
+    <div class="check-item" onclick="toggle(this)">
+      <div class="check-box"></div>
+      <div class="check-content">
+        <div class="check-label">Each performer verbally confirms IEM mix is good</div>
+        <div class="check-note">Thumbs up from the stage is not enough. Confirm verbally or via talkback that each performer is satisfied.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- PHASE 4: RECORDING & STREAM -->
+  <div class="section-label"><span class="phase-tag phase-service">Phase 4</span> Recording &amp; Livestream</div>
+  <div class="checklist" id="phase-4">
+    <div class="check-item" onclick="toggle(this)">
+      <div class="check-box"></div>
+      <div class="check-content">
+        <div class="check-label">Arm Reaper — confirm signal on all tracks</div>
+        <div class="check-note">Mackie Onyx interface connected, Reaper open, all tracks armed and showing input signal. Press record before the service starts.</div>
+      </div>
+    </div>
+    <div class="check-item" onclick="toggle(this)">
+      <div class="check-box"></div>
+      <div class="check-content">
+        <div class="check-label">Confirm Restream is active and showing signal</div>
+        <div class="check-note">Livestream bus output level is appropriate. Restream dashboard shows incoming signal. The stream audience is real — treat this as a second congregation.</div>
+      </div>
+    </div>
+    <div class="check-item" onclick="toggle(this)">
+      <div class="check-box"></div>
+      <div class="check-content">
+        <div class="check-label">Coordinate with video operator — confirm ready status</div>
+        <div class="check-note">Both operators confirm go status before the first song. Any unresolved issues are raised now, not during a transition.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- PHASE 5: PRE-SERVICE -->
+  <div class="section-label"><span class="phase-tag phase-service">Phase 5</span> Pre-Service &amp; Final Checks</div>
+  <div class="checklist" id="phase-5">
+    <div class="check-item" onclick="toggle(this)">
+      <div class="check-box"></div>
+      <div class="check-content">
+        <div class="check-label">Start Spotify pre-service music — confirm level</div>
+        <div class="check-note">Background level — warm, not a concert. All live channels confirmed muted. No bleed from open mics into the house.</div>
+      </div>
+    </div>
+    <div class="check-item" onclick="toggle(this)">
+      <div class="check-box"></div>
+      <div class="check-content">
+        <div class="check-label">Walk the room — confirm house mix sounds right from multiple positions</div>
+        <div class="check-note">What you hear at FOH is not what the congregation hears. Walk to the back and sides before they arrive.</div>
+      </div>
+    </div>
+    <div class="check-item" onclick="toggle(this)">
+      <div class="check-box"></div>
+      <div class="check-content">
+        <div class="check-label">All unresolved issues escalated before congregation arrives</div>
+        <div class="check-note">If something is not right, say so now. The tech director needs time to help. Silence until the first song is not acceptable.</div>
+      </div>
+      <div class="check-critical">Critical</div>
+    </div>
+  </div>
+
+  <!-- Notes -->
+  <div class="notes-section">
+    <div class="notes-title">Service Notes / Issues Logged</div>
+    <textarea class="notes-field" id="service-notes" placeholder="Log any issues, adjustments, or follow-up items here..."></textarea>
+  </div>
+
+  <!-- Print-only notes lines -->
+  <div class="print-notes">
+    <div class="print-notes-title">Service Notes / Issues Logged</div>
+    <div class="print-note-line"></div>
+    <div class="print-note-line"></div>
+    <div class="print-note-line"></div>
+    <div class="print-note-line"></div>
+    <div class="print-note-line"></div>
+    <div class="print-note-line"></div>
+  </div>
+
+</div>
+
+<footer style="border-top:1px solid var(--border);padding:24px;text-align:center;font-size:13px;color:var(--text-muted);font-family:var(--font-body);">
+  <a href="compression-ref.html" style="color:var(--amber);text-decoration:none;">← Compression Ref</a>
+  &nbsp;·&nbsp; Family Life Worship Center — Sound &amp; Tech Reference
+  &nbsp;·&nbsp; <a href="../index.html" style="color:var(--amber);text-decoration:none;">Sound &amp; Tech Home →</a>
+</footer>
+
+<script>
+function toggle(el) {
+  el.classList.toggle('done');
+  el.querySelector('.check-box').textContent = el.classList.contains('done') ? '✓' : '';
+  updateProgress();
+  saveState();
+}
+
+function updateProgress() {
+  const all   = document.querySelectorAll('.check-item');
+  const done  = document.querySelectorAll('.check-item.done');
+  const pct   = all.length ? Math.round((done.length / all.length) * 100) : 0;
+  document.getElementById('progress-fill').style.width  = pct + '%';
+  document.getElementById('progress-label').textContent = `${done.length} / ${all.length}`;
+}
+
+function saveState() {
+  const items = document.querySelectorAll('.check-item');
+  const state = [...items].map(el => el.classList.contains('done'));
+  const notes = document.getElementById('service-notes').value;
+  sessionStorage.setItem('flwc-checklist', JSON.stringify({ state, notes }));
+}
+
+function loadState() {
+  const saved = sessionStorage.getItem('flwc-checklist');
+  if (!saved) return;
+  try {
+    const { state, notes } = JSON.parse(saved);
+    const items = document.querySelectorAll('.check-item');
+    items.forEach((el, i) => {
+      if (state[i]) { el.classList.add('done'); el.querySelector('.check-box').textContent = '✓'; }
+    });
+    if (notes) document.getElementById('service-notes').value = notes;
+    updateProgress();
+  } catch(e) {}
+}
+
+function resetAll() {
+  if (!confirm('Reset all checklist items?')) return;
+  document.querySelectorAll('.check-item').forEach(el => {
+    el.classList.remove('done');
+    el.querySelector('.check-box').textContent = '';
+  });
+  document.getElementById('service-notes').value = '';
+  sessionStorage.removeItem('flwc-checklist');
+  updateProgress();
+}
+
+document.getElementById('service-notes').addEventListener('input', saveState);
+document.addEventListener('DOMContentLoaded', () => { loadState(); updateProgress(); });
+</script>
+
+</body>
+</html>

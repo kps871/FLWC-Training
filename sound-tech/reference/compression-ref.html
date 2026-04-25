@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Compression Quick Reference — FLWC Sound & Tech</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Oxanium:wght@400;600;700;800&family=DM+Sans:ital,wght@0,400;0,500;0,600;1,400&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing:border-box; margin:0; padding:0; }
+    :root {
+      --bg:#09090f; --surface:#111118; --surface2:#1a1a26; --surface3:#22223a;
+      --border:#2a2a40; --border2:#3a3a58;
+      --amber:#f0a500; --amber-dim:#7a5200; --amber-glow:rgba(240,165,0,0.12);
+      --cyan:#00d4ff; --cyan-dim:#004d5e; --cyan-glow:rgba(0,212,255,0.10);
+      --green:#3dd68c; --green-dim:#0d4a27; --green-glow:rgba(61,214,140,0.10);
+      --red:#f25c54; --red-dim:#4a0d0a; --red-glow:rgba(242,92,84,0.10);
+      --text:#e8e8f0; --text-muted:#7070a0; --text-dim:#404060;
+      --font-head:'Oxanium',sans-serif; --font-body:'DM Sans',sans-serif; --font-mono:'JetBrains Mono',monospace;
+      --radius:8px; --radius-lg:14px; --transition:all 0.18s ease;
+    }
+    body { font-family:var(--font-body); background:var(--bg); color:var(--text); font-size:16px; line-height:1.6; -webkit-font-smoothing:antialiased; }
+
+    .site-header { background:var(--surface); border-bottom:1px solid var(--border); padding:0 24px; position:sticky; top:0; z-index:100; }
+    .site-header-inner { max-width:1140px; margin:0 auto; display:flex; align-items:center; justify-content:space-between; height:60px; gap:24px; }
+    .site-logo { display:flex; align-items:center; gap:12px; text-decoration:none; }
+    .site-logo-mark { width:34px; height:34px; background:var(--amber); border-radius:6px; display:flex; align-items:center; justify-content:center; font-family:var(--font-head); font-size:14px; font-weight:800; color:var(--bg); }
+    .site-logo-text { font-family:var(--font-head); font-size:15px; font-weight:700; color:var(--text); }
+    .site-logo-sub { font-size:10px; color:var(--text-muted); display:block; line-height:1; margin-top:1px; text-transform:uppercase; letter-spacing:0.5px; }
+    .site-nav a { color:var(--text-muted); text-decoration:none; font-size:13px; font-weight:500; padding:6px 12px; border-radius:var(--radius); }
+    .site-nav a:hover { color:var(--text); background:var(--surface2); }
+    .site-nav a.active { color:var(--amber); }
+    .site-nav { display:flex; gap:4px; }
+    .breadcrumb-bar { background:var(--surface); border-bottom:1px solid var(--border); padding:10px 24px; font-family:var(--font-mono); font-size:11px; color:var(--text-muted); }
+    .breadcrumb-bar a { color:var(--text-muted); text-decoration:none; }
+    .breadcrumb-bar span { color:var(--text-dim); margin:0 6px; }
+
+    .page-wrap { max-width:1140px; margin:0 auto; padding:40px 24px 80px; }
+    .page-header { margin-bottom:36px; padding-bottom:24px; border-bottom:1px solid var(--border); }
+    .page-eyebrow { font-family:var(--font-mono); font-size:10px; font-weight:600; letter-spacing:2.5px; text-transform:uppercase; color:var(--amber); margin-bottom:8px; }
+    .page-title { font-family:var(--font-head); font-size:clamp(24px,4vw,36px); font-weight:800; color:var(--text); margin-bottom:8px; }
+    .page-desc { font-size:15px; color:var(--text-muted); max-width:600px; line-height:1.65; }
+    .print-btn { display:inline-flex; align-items:center; gap:8px; padding:8px 18px; background:var(--surface2); border:1px solid var(--border); border-radius:var(--radius); color:var(--text-muted); font-size:13px; font-weight:600; cursor:pointer; transition:var(--transition); margin-top:16px; font-family:var(--font-body); }
+    .print-btn:hover { color:var(--text); border-color:var(--border2); }
+
+    .section-label { font-family:var(--font-mono); font-size:10px; font-weight:600; text-transform:uppercase; letter-spacing:2px; color:var(--text-muted); margin-bottom:20px; display:flex; align-items:center; gap:12px; }
+    .section-label::after { content:''; flex:1; height:1px; background:var(--border); }
+
+    /* Parameters grid */
+    .param-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(280px,1fr)); gap:16px; margin-bottom:40px; }
+    .param-card { background:var(--surface); border:1px solid var(--border); border-radius:var(--radius-lg); padding:20px; }
+    .param-name { font-family:var(--font-mono); font-size:12px; font-weight:600; color:var(--amber); text-transform:uppercase; letter-spacing:1px; margin-bottom:8px; }
+    .param-def { font-size:14px; font-weight:600; color:var(--text); margin-bottom:6px; }
+    .param-desc { font-size:13px; color:var(--text-muted); line-height:1.55; }
+
+    /* Settings table */
+    .ref-table-wrap { overflow-x:auto; margin-bottom:40px; border-radius:var(--radius-lg); border:1px solid var(--border); }
+    table { width:100%; border-collapse:collapse; font-size:14px; }
+    thead th { background:var(--surface2); color:var(--text-muted); font-family:var(--font-mono); font-size:10px; font-weight:600; text-transform:uppercase; letter-spacing:1.5px; padding:12px 16px; text-align:left; border-bottom:2px solid var(--border); white-space:nowrap; }
+    tbody td { padding:13px 16px; border-bottom:1px solid var(--border); vertical-align:top; line-height:1.55; font-size:13px; }
+    tbody tr:last-child td { border-bottom:none; }
+    tbody tr:hover td { background:var(--surface2); }
+    .source-name { font-weight:600; color:var(--text); font-size:14px; }
+    .val-tag { font-family:var(--font-mono); font-size:12px; font-weight:600; color:var(--cyan); }
+    .why-text { color:var(--text-muted); font-size:12px; }
+
+    /* GR Meter guide */
+    .gr-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(260px,1fr)); gap:12px; margin-bottom:40px; }
+    .gr-card { border-radius:var(--radius); padding:14px 16px; border-left:3px solid; }
+    .gr-card.red   { background:var(--red-glow);   border-color:var(--red);   }
+    .gr-card.amber { background:var(--amber-glow); border-color:var(--amber); }
+    .gr-card.green { background:var(--green-glow); border-color:var(--green); }
+    .gr-card.cyan  { background:var(--cyan-glow);  border-color:var(--cyan);  }
+    .gr-symptom { font-family:var(--font-mono); font-size:11px; font-weight:600; text-transform:uppercase; letter-spacing:1px; margin-bottom:6px; }
+    .gr-symptom.red   { color:var(--red); }
+    .gr-symptom.amber { color:var(--amber); }
+    .gr-symptom.green { color:var(--green); }
+    .gr-symptom.cyan  { color:var(--cyan); }
+    .gr-fix { font-size:13px; color:var(--text); line-height:1.55; }
+
+    /* ── PRINT ───────────────────────────────────────────── */
+    @media print {
+      * { -webkit-print-color-adjust:exact !important; print-color-adjust:exact !important; }
+      body { background:#fff !important; color:#111 !important; font-size:10pt; font-family:Arial,sans-serif; }
+      .site-header,.breadcrumb-bar,.print-btn,footer { display:none !important; }
+      .page-wrap { padding:0; max-width:100%; }
+      .page-header { border-bottom:2px solid #333; padding-bottom:10pt; margin-bottom:18pt; }
+      .page-eyebrow { color:#c27a00 !important; font-size:7pt; }
+      .page-title { color:#111 !important; font-size:18pt; margin-bottom:3pt; }
+      .page-desc { color:#444 !important; font-size:9pt; }
+      .section-label { color:#444 !important; font-size:7pt; }
+      .section-label::after { background:#ccc; }
+      .param-grid { gap:10pt; margin-bottom:16pt; }
+      .param-card { background:#f9f9f9 !important; border:1px solid #ccc; border-radius:4pt; padding:10pt; page-break-inside:avoid; }
+      .param-name { color:#8a5500 !important; font-size:8pt; }
+      .param-def { color:#111 !important; font-size:10pt; }
+      .param-desc { color:#444 !important; font-size:8pt; }
+      .ref-table-wrap { border:1px solid #ccc; border-radius:0; margin-bottom:16pt; }
+      thead th { background:#f0f0f0 !important; color:#333 !important; font-size:7pt; padding:6pt 8pt; }
+      tbody td { padding:6pt 8pt; border-bottom:1px solid #e0e0e0; font-size:9pt; }
+      tbody tr:hover td { background:#fff !important; }
+      .source-name { color:#111 !important; font-size:10pt; }
+      .val-tag { color:#005a8a !important; font-size:9pt; }
+      .why-text { color:#444 !important; font-size:8pt; }
+      .gr-grid { gap:8pt; margin-bottom:16pt; }
+      .gr-card { page-break-inside:avoid; padding:8pt 10pt; }
+      .gr-card.red   { background:#fde8e8 !important; border-color:#c00 !important; }
+      .gr-card.amber { background:#fef3cd !important; border-color:#c27a00 !important; }
+      .gr-card.green { background:#e8f8f0 !important; border-color:#1a6040 !important; }
+      .gr-card.cyan  { background:#e0f7fd !important; border-color:#004060 !important; }
+      .gr-symptom.red   { color:#c00 !important; }
+      .gr-symptom.amber { color:#8a5500 !important; }
+      .gr-symptom.green { color:#1a6040 !important; }
+      .gr-symptom.cyan  { color:#004060 !important; }
+      .gr-fix { color:#222 !important; font-size:8pt; }
+      .print-header { display:block !important; text-align:center; margin-bottom:14pt; padding-bottom:8pt; border-bottom:1px solid #ccc; }
+      .print-header-title { font-size:8pt; color:#888; }
+      @page { margin:0.75in; size:letter; }
+    }
+    .print-header { display:none; }
+  </style>
+</head>
+<body>
+
+<header class="site-header">
+  <div class="site-header-inner">
+    <a href="../index.html" class="site-logo">
+      <div class="site-logo-mark">FL</div>
+      <div><span class="site-logo-text">Family Life Worship Center</span>
+      <span class="site-logo-sub">Sound &amp; Tech Training</span></div>
+    </a>
+    <nav class="site-nav">
+      <a href="../../index.html">Portal</a>
+      <a href="../index.html">Sound &amp; Tech</a>
+      <a href="compression-ref.html" class="active">Compression Ref</a>
+    </nav>
+  </div>
+</header>
+<div class="breadcrumb-bar">
+  <a href="../../index.html">Portal</a><span>›</span>
+  <a href="../index.html">Sound &amp; Tech</a><span>›</span>
+  Reference<span>›</span>Compression Quick Reference
+</div>
+
+<div class="page-wrap">
+  <div class="print-header"><div class="print-header-title">Family Life Worship Center — Sound &amp; Tech Reference</div></div>
+
+  <div class="page-header">
+    <div class="page-eyebrow">Reference — Study + At the Board</div>
+    <h1 class="page-title">Compression Quick Reference</h1>
+    <p class="page-desc">Starting settings for every source. GR meter diagnostics. The reasoning behind drums vs. vocals — not just the numbers.</p>
+    <button class="print-btn" onclick="window.print()">🖨 Print This Page</button>
+  </div>
+
+  <!-- Parameters -->
+  <div class="section-label">Core Parameters</div>
+  <div class="param-grid">
+    <div class="param-card">
+      <div class="param-name">Threshold</div>
+      <div class="param-def">The level at which compression begins</div>
+      <div class="param-desc">Signal below threshold is untouched. Signal above it is reduced. Start by lowering threshold until the GR meter just starts moving on average signal, then back off slightly.</div>
+    </div>
+    <div class="param-card">
+      <div class="param-name">Ratio</div>
+      <div class="param-def">How aggressively the level is reduced above threshold</div>
+      <div class="param-desc">At 4:1 — for every 4 dB over threshold, only 1 dB passes through. Higher ratio = harder clamp. Limit (∞:1) = hard ceiling. Most live sources: 2:1–6:1.</div>
+    </div>
+    <div class="param-card">
+      <div class="param-name">Attack</div>
+      <div class="param-def">How fast the compressor responds</div>
+      <div class="param-desc">Fast attack grabs transients — kills drum punch if too fast. Slow attack lets transients through before compression engages. Critical difference between drums and vocals.</div>
+    </div>
+    <div class="param-card">
+      <div class="param-name">Release</div>
+      <div class="param-def">How quickly the compressor recovers</div>
+      <div class="param-desc">Too fast = pumping. Too slow = compressor never recovers between notes. Match release to the natural decay of the source. Auto release is a safe starting point.</div>
+    </div>
+    <div class="param-card">
+      <div class="param-name">Knee</div>
+      <div class="param-def">Hard or soft onset of compression</div>
+      <div class="param-desc">Hard knee = compression begins abruptly at threshold. Soft knee = compression eases in gradually around threshold. Soft knee sounds more natural on vocals.</div>
+    </div>
+    <div class="param-card">
+      <div class="param-name">Makeup Gain</div>
+      <div class="param-def">Restores level lost to compression</div>
+      <div class="param-desc">Compression reduces average level. Makeup gain brings it back. Set after threshold and ratio are dialed in. Do not use it to compensate for gain structure errors.</div>
+    </div>
+  </div>
+
+  <!-- Settings Table -->
+  <div class="section-label">Starting Settings by Source</div>
+  <div class="ref-table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th>Source</th>
+          <th>Ratio</th>
+          <th>Attack</th>
+          <th>Release</th>
+          <th>Target GR</th>
+          <th>Why</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><span class="source-name">Kick Drum</span></td>
+          <td><span class="val-tag">4:1–6:1</span></td>
+          <td><span class="val-tag">5–10ms</span></td>
+          <td><span class="val-tag">50–100ms</span></td>
+          <td><span class="val-tag">4–8 dB</span></td>
+          <td class="why-text">Fast attack but not zero — let the beater transient through before compression clamps. Fast release recovers between hits so the compressor is not still working when the next beat arrives.</td>
+        </tr>
+        <tr>
+          <td><span class="source-name">Snare Drum</span></td>
+          <td><span class="val-tag">4:1–6:1</span></td>
+          <td><span class="val-tag">5–10ms</span></td>
+          <td><span class="val-tag">80–120ms</span></td>
+          <td><span class="val-tag">4–6 dB</span></td>
+          <td class="why-text">Similar to kick. Tighten the crack without killing the snap. Slightly slower release than kick gives the snare tail room to breathe.</td>
+        </tr>
+        <tr>
+          <td><span class="source-name">Overhead Mics</span></td>
+          <td><span class="val-tag">2:1–3:1</span></td>
+          <td><span class="val-tag">10–30ms</span></td>
+          <td><span class="val-tag">Auto</span></td>
+          <td><span class="val-tag">2–4 dB</span></td>
+          <td class="why-text">Light touch only. Overheads carry the natural dynamic of the kit. Compress too hard and you lose the roominess and the natural swell of cymbals.</td>
+        </tr>
+        <tr>
+          <td><span class="source-name">Bass Guitar</span></td>
+          <td><span class="val-tag">4:1</span></td>
+          <td><span class="val-tag">10–20ms</span></td>
+          <td><span class="val-tag">Auto</span></td>
+          <td><span class="val-tag">4–8 dB</span></td>
+          <td class="why-text">Even out playing dynamics. Notes should feel consistent in the mix — not mechanically flat, but controlled. More compression here than on drums is appropriate.</td>
+        </tr>
+        <tr>
+          <td><span class="source-name">Lead Vocal</span></td>
+          <td><span class="val-tag">2:1–3:1</span></td>
+          <td><span class="val-tag">15–25ms</span></td>
+          <td><span class="val-tag">100–200ms</span></td>
+          <td><span class="val-tag">3–6 dB</span></td>
+          <td class="why-text">Slower attack preserves natural dynamic expression. Catch the loudest peaks, not the performance. Soft knee sounds more natural. Longer release avoids pumping on lyric-heavy passages.</td>
+        </tr>
+        <tr>
+          <td><span class="source-name">Background Vocals</span></td>
+          <td><span class="val-tag">3:1–4:1</span></td>
+          <td><span class="val-tag">10–15ms</span></td>
+          <td><span class="val-tag">100–150ms</span></td>
+          <td><span class="val-tag">4–8 dB</span></td>
+          <td class="why-text">BGVs need more consistency than leads — they should sit under the lead without poking through or disappearing. Slightly harder compression than lead vocal is appropriate.</td>
+        </tr>
+        <tr>
+          <td><span class="source-name">Acoustic Guitar</span></td>
+          <td><span class="val-tag">2:1–3:1</span></td>
+          <td><span class="val-tag">10–20ms</span></td>
+          <td><span class="val-tag">150–250ms</span></td>
+          <td><span class="val-tag">3–5 dB</span></td>
+          <td class="why-text">Control dynamic pick attack without squashing the natural body. Slower release preserves the sustain of chord strums. Light-handed is almost always better here.</td>
+        </tr>
+        <tr>
+          <td><span class="source-name">Sermon Headset</span></td>
+          <td><span class="val-tag">2:1–3:1</span></td>
+          <td><span class="val-tag">10–20ms</span></td>
+          <td><span class="val-tag">150–300ms</span></td>
+          <td><span class="val-tag">3–6 dB</span></td>
+          <td class="why-text">Spoken word varies widely in dynamics. Gentle compression keeps the pastor intelligible at both quiet intimate moments and emphatic peaks. Never crush the life out of a spoken performance.</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- GR Meter Diagnostics -->
+  <div class="section-label">GR Meter Diagnostics</div>
+  <div class="gr-grid">
+    <div class="gr-card red">
+      <div class="gr-symptom red">GR meter never moves</div>
+      <div class="gr-fix">Threshold is too high. Signal never reaches it. Lower the threshold until you see 2–3 dB of reduction on average signal levels.</div>
+    </div>
+    <div class="gr-card red">
+      <div class="gr-symptom red">GR meter permanently pinned</div>
+      <div class="gr-fix">Threshold too low or ratio too high. The compressor is crushing the signal. Raise threshold or reduce ratio until GR peaks at 6–8 dB on the loudest moments only.</div>
+    </div>
+    <div class="gr-card amber">
+      <div class="gr-symptom amber">GR pumping in time with the music</div>
+      <div class="gr-fix">Release time is too fast. The compressor fully recovers and slams down again on every beat. Increase release until the GR meter moves smoothly without surging.</div>
+    </div>
+    <div class="gr-card amber">
+      <div class="gr-symptom amber">Result sounds squashed — no life</div>
+      <div class="gr-fix">Attack too fast or ratio too high. Slow the attack to let transients through, or reduce the ratio. For vocals — slow attack first. For drums — check ratio first.</div>
+    </div>
+    <div class="gr-card green">
+      <div class="gr-symptom green">GR moving 3–6 dB on peaks — sounds natural</div>
+      <div class="gr-fix">This is the target state for most live sources. The compressor is working but the audience cannot hear it. Leave it and move on.</div>
+    </div>
+    <div class="gr-card cyan">
+      <div class="gr-symptom cyan">Vocal level inconsistent despite compression</div>
+      <div class="gr-fix">The compressor is catching peaks but not the performance variation. Lower the threshold to increase overall compression, or ask the vocalist to maintain more consistent mic technique.</div>
+    </div>
+  </div>
+
+</div>
+
+<footer style="border-top:1px solid var(--border);padding:24px;text-align:center;font-size:13px;color:var(--text-muted);font-family:var(--font-body);">
+  <a href="eq-troubleshoot.html" style="color:var(--amber);text-decoration:none;">← EQ Troubleshooting</a>
+  &nbsp;·&nbsp; Family Life Worship Center — Sound &amp; Tech Reference
+  &nbsp;·&nbsp; <a href="service-checklist.html" style="color:var(--amber);text-decoration:none;">Service Checklist →</a>
+</footer>
+
+</body>
+</html>
